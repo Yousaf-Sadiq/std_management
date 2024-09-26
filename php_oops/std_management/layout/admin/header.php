@@ -1,5 +1,6 @@
 <?php 
  require_once dirname(__DIR__)."/../include/web.php";
+ require_once dirname(__DIR__)."/../include/table.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,7 +42,15 @@
  <!-- Style css -->
  <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
  <link href="<?php echo AdminAsset; ?>css/style.css" rel="stylesheet">
-
+<style>
+    #error{
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        width: 300px;
+        z-index: 999999999999999999;
+    }
+</style>
 </head>
 
 <body>
@@ -85,3 +94,4 @@
   <div class="content-body">
    <!-- row -->
    <div class="container-fluid">
+   <div id="error"></div>

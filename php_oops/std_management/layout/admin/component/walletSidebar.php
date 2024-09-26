@@ -2,7 +2,7 @@
 		<!--****
 		Wallet Sidebar
 		****-->
-		<div class="wallet-bar wow fadeInRight dlab-scroll active" id="wallet-bar" data-wow-delay="0.7s">		
+		<div class="wallet-bar wow fadeInRight dlab-scroll" id="wallet-bar" data-wow-delay="0.7s">		
 			<div class="row ">
 				<!--column-->
 				<div class="col-xl-12">

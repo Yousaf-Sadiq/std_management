@@ -347,20 +347,23 @@ var Akademi  = function(){
 	   }
    }
    
-   var handleCkEditor = function(){
-	   if(jQuery("#ckeditor").length>0) {
-		   ClassicEditor
-		   .create( document.querySelector( '#ckeditor' ), {
-			   // toolbar: [ 'heading', '|', 'bold', 'italic', 'link' ]
-		   } )
-		   .then( editor => {
-			   window.editor = editor;
-		   } )
-		   .catch( err => {
-			   console.error( err.stack );
-		   } );
-	   }
-   }
+//    var handleCkEditor = function(){
+// 	   if(jQuery("#ckeditor").length>0) {
+// 		// var ClassicEditor=jQuery("#ckeditor");
+
+// 		CKEDITOR
+// 		   .replace( document.querySelector( '#ckeditor' ), {
+// 			   // toolbar: [ 'heading', '|', 'bold', 'italic', 'link' ]
+// 		   } )
+// 		   .then( editor => {
+// 			   window.editor = editor;
+// 		   } )
+// 		   .catch( err => {
+
+// 			   console.error( err.stack );
+// 		   } );
+// 	   }
+//    }
    
    var handleMenuPosition = function(){
 	   
@@ -671,7 +674,7 @@ var Akademi  = function(){
 		   vHeight();
 		   domoPanel();
 		   handleDatetimepicker();
-		   handleCkEditor();
+		//    handleCkEditor();
 		   handleImageSelect();
 		   //headerFix();
 		   handelBootstrapSelect();
