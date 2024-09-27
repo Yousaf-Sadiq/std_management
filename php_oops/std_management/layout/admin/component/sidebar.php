@@ -22,8 +22,8 @@
 					<span class="nav-text">COURSE</span>
 				</a>
 				<ul aria-expanded="false">
-					<li><a href="index.html">Add Course</a></li>
-					<li><a href="index-2.html">View Course</a></li>
+					<li><a href="<?php echo Add_course ?>">Add Course</a></li>
+					<li><a href="<?php echo view_course ?>">View Course</a></li>
 				</ul>
 
 			</li>
