@@ -3,12 +3,12 @@ require_once dirname(__DIR__) . "/../layout/admin/header.php";
 ?>
 
 
-<div class="container-fluid">
+<div class="container-fluid card">
 
     <form id="Course" action="javascript:void(0)">
         <input type="hidden" name="inserts" value="inserts">
         <div class="mb-3 row">
-            <label class="col-sm-3 col-form-label">COURSE NAME</label>
+            <label class="col-sm-3  col-md-12 col-form-label">COURSE NAME</label>
             <div class="col-sm-9">
                 <input type="text" class="form-control" name="c_name" placeholder="ENTER COURSE NAME">
             </div>
@@ -18,10 +18,7 @@ require_once dirname(__DIR__) . "/../layout/admin/header.php";
 
             <div class="card  bg-white">
                 <label class="col-sm-3 col-form-label">COURSE OUTLINE</label>
-                <div class="card-body">
-                    <textarea id="editor"></textarea>
-
-                </div>
+                <textarea id="editor"></textarea>
             </div>
 
         </div>

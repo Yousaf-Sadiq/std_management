@@ -83,7 +83,8 @@ $help = new help();
                                         onclick="OnEdit('<?php echo $c_id ?>','<?php echo $c_name ?>','<?php echo $c_status ?>','<?php echo $c_outline ?>')"
                                         class="btn btn-primary shadow btn-xs sharp me-1"><i class="fa fa-pencil"></i></a>
 
-                                    <a href="#" class="btn btn-danger shadow btn-xs sharp"><i class="fa fa-trash"></i></a>
+                                    <a href="#" onclick="OnDelete('<?php echo $c_id ?>')"
+                                        class="btn btn-danger shadow btn-xs sharp"><i class="fa fa-trash"></i></a>
                                 </div>
                             </td>
                         </tr>
@@ -93,7 +94,9 @@ $help = new help();
                 </tbody>
             </table>
         </div>
-    <?php } ?>
+    <?php } else {
+        echo "<h1>No courses found</h1>";
+    } ?>
 
     <!-- <form id="Course" action="javascript:void(0)">
         <input type="hidden" name="inserts" value="inserts">
@@ -127,6 +130,7 @@ $help = new help();
     </form> -->
 </div>
 
+<!-- edit modal  -->
 
 <div class="modal fade" id="edit_modal" style="display: none;" data-bs-backdrop="static" data-bs-keyboard="false"
     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -187,6 +191,49 @@ $help = new help();
     </div>
 </div>
 
+<!-- =------------- -->
+
+
+
+<!-- delete modal  -->
+
+
+<div class="modal fade" id="delete_modal" style="display: none;" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">DELETE</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <h1> ARE YOU SURE <span class="text-danger">!</span> </h1>
+
+
+                <form id="del_Course" action="javascript:void(0)">
+                    <input type="hidden" name="deletes" value="deletes">
+                    <input type="hidden" name="c_id" id="cId">
+
+
+                    <div class="mb-3 row">
+                        <div class="col-sm-10">
+                            <button type="submit" id="ok" class=    "btn btn-primary">DELETE</button>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div> -->
+        </div>
+    </div>
+</div>
+
 
 
 <?php
@@ -220,6 +267,70 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
         })
 
     })
+
+
+
+    function OnDelete(id) {
+
+        let DeleteModal = document.querySelector("#delete_modal");
+
+        const myModalAlternative = new bootstrap.Modal(DeleteModal)
+        myModalAlternative.show(DeleteModal)
+
+
+        let c_ids = document.querySelector("#cId");
+        c_ids.value = id;
+
+
+
+    }
+
+// --------------------------------------------------------------
+
+let delCourse = document.querySelector("#del_Course");
+
+delCourse.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+
+
+    let formData = new FormData(delCourse);
+   
+
+
+    let url = "<?php echo c_form_action; ?>";
+
+    let options = {
+        method: "POST",
+        body: formData
+    };
+
+    let data = await fetch(url, options);
+    let res = await data.json();
+    console.log(res);
+
+    if (res.error && res.error > 0) {
+
+        for (const key in res.msg) {
+
+            ALertMSG("error", res.msg[key], "danger")
+        }
+    }
+    else {
+
+        ALertMSG("error", res.msg, "success");
+
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
+    }
+})
+
+
+    // =============================================================
+
+
+
 
 
 

@@ -117,4 +117,50 @@ if (isset($_POST["updates"]) && !empty($_POST["updates"])) {
 }
 
 
+
+
+if (isset($_POST["deletes"]) && !empty($_POST["deletes"])) {
+
+    $c_id = $_POST["c_id"];
+
+
+    $status = [
+        "error" => 0,
+        "msg" => []
+    ];
+
+    if (!isset($c_id) || empty($c_id)) {
+        $status['error']++;
+        array_push($status["msg"], "COURSE ID IS REQUIRED");
+    }
+
+
+
+    $check = "SELECT * FROM `" . COURSE . "` WHERE `c_id`='{$c_id}'";
+    $exe = $db->Mysql($check, true);
+
+    if (!$exe) {
+
+        $status['error']++;
+        array_push($status["msg"], "Invalid ID");
+    }
+
+
+
+    if ($status["error"] > 0) {
+        echo json_encode($status);
+
+        return;
+    } else {
+
+        // $data = [
+        //     "course_name" => $course_name,
+        //     "course_outline" => $c_outline,
+        //     "course_status" => $c_status
+        // ];
+
+        echo $db->delete(COURSE, "`c_id`='{$c_id}'");
+    }
+}
+
 ?>
