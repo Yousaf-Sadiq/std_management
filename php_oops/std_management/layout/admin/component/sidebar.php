@@ -36,7 +36,7 @@
 				<ul aria-expanded="false">
 					<li><a href="student.html">Student</a></li>
 					<li><a href="student-detail.html">Student Detail</a></li>
-					<li><a href="add-student.html">Add New Student</a></li>
+					<li><a href="<?php echo ADD_STD ?>">Add New Student</a></li>
 
 				</ul>
 

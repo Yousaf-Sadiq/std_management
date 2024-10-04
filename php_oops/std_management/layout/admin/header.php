@@ -85,7 +85,7 @@
   require_once "component/chatbox.php";
   require_once "component/startHeader.php";
   require_once "component/sidebar.php";
-  require_once "component/walletSidebar.php";
+//   require_once "component/walletSidebar.php";
 
   ?>
 
