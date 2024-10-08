@@ -80,12 +80,13 @@ if (isset($_POST["inserts"]) && !empty($_POST["inserts"])) {
 
 if (isset($_POST["updates"]) && !empty($_POST["updates"])) {
 
-    $course_name = $help->filter_data($_POST["c_name"]);
-    $course_name = strtoupper($course_name);
 
-    $c_outline = $_POST["c_outline"];
-    $c_id = $_POST["c_id"];
-    $c_status = $_POST["c_status"];
+    $p_f_name = $help->filter_data($_POST["p_f_name"]);
+    $p_l_name = $help->filter_data($_POST["p_l_name"]);
+    $p_email = $help->filter_data($_POST["p_email"]);
+    $p_number = $help->filter_data($_POST["p_number"]);
+    $p_id = $help->filter_data($_POST["p_id"]);
+    $p_status = $help->filter_data($_POST["p_status"]);
 
 
     $status = [
@@ -93,30 +94,35 @@ if (isset($_POST["updates"]) && !empty($_POST["updates"])) {
         "msg" => []
     ];
 
-    if (!isset($course_name) || empty($course_name)) {
+    if (!isset($p_f_name) || empty($p_f_name)) {
         $status['error']++;
-        array_push($status["msg"], "COURSE NAME IS REQUIRED");
+        array_push($status["msg"], "FIRST NAME IS REQUIRED");
+    }
+
+    if (!isset($p_l_name) || empty($p_l_name)) {
+        $status['error']++;
+        array_push($status["msg"], "LAST NAME IS REQUIRED");
+    }
+
+    if (!isset($p_number) || empty($p_number)) {
+        $status['error']++;
+        array_push($status["msg"], "NUmber IS REQUIRED");
+    }
+
+    if (!isset($p_email) || empty($p_email)) {
+        $status['error']++;
+        array_push($status["msg"], "EMAIL IS REQUIRED");
     }
 
 
 
-    if (!isset($c_status)) {
-        $status['error']++;
-        array_push($status["msg"], "COURSE STATUS IS REQUIRED");
-    }
-
-    if (!isset($c_outline) || empty($c_outline)) {
-        $status['error']++;
-        array_push($status["msg"], "COURSE OUTLINE IS REQUIRED");
-    }
-
-    $check = "SELECT * FROM `" . COURSE . "` WHERE `course_name`='{$course_name}' AND `c_id`<> '{$c_id}'  ";
+    $check = "SELECT * FROM `" . _Parent . "` WHERE `email`='{$p_email}' AND `p_id`<> '{$p_id}' ";
     $exe = $db->Mysql($check, true);
 
     if ($exe) {
 
         $status['error']++;
-        array_push($status["msg"], "COURSE NAME ALREADY EXIST");
+        array_push($status["msg"], "EMAIL ALREADY EXIST");
     }
 
 
@@ -127,13 +133,15 @@ if (isset($_POST["updates"]) && !empty($_POST["updates"])) {
         return;
     } else {
 
-        $data = [
-            "course_name" => $course_name,
-            "course_outline" => $c_outline,
-            "course_status" => $c_status
-        ];
 
-        echo $db->update(COURSE, $data, "`c_id`='{$c_id}'");
+        $data = [
+            "f_name" => $p_f_name,
+            "l_name" => $p_l_name,
+            "email" => $p_email,
+            "contact" => $p_number,
+            "p_status" => $p_status
+        ];
+        echo $db->update(_Parent, $data, "`p_id`='{$p_id}'");
     }
 }
 
