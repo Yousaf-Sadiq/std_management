@@ -60,7 +60,7 @@
  <!--*******************
         Preloader start
     ********************-->
- <!-- <div id="preloader">
+ <div id="preloader">
   <div class="loader">
    <div class="dots">
     <div class="dot mainDot"></div>
@@ -71,7 +71,7 @@
    </div>
 
   </div>
- </div> -->
+ </div>
  <!--*******************
         Preloader end
     ********************-->

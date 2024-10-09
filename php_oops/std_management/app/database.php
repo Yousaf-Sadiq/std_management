@@ -32,6 +32,11 @@ class DB
     use \Insert, \CheckTable, \Mysql, \Select, \FetchData, \Update, \Delete;
 
 
+    public function GetId()
+    {
+        return $this->conn->insert_id;
+    }
+
     public function __construct()
     {
 

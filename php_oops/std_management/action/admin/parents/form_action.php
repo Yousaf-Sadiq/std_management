@@ -160,12 +160,12 @@ if (isset($_POST["deletes"]) && !empty($_POST["deletes"])) {
 
     if (!isset($c_id) || empty($c_id)) {
         $status['error']++;
-        array_push($status["msg"], "COURSE ID IS REQUIRED");
+        array_push($status["msg"], "PARENT ID IS REQUIRED");
     }
 
 
 
-    $check = "SELECT * FROM `" . COURSE . "` WHERE `c_id`='{$c_id}'";
+    $check = "SELECT * FROM `" . _Parent . "` WHERE `p_id`='{$c_id}'";
     $exe = $db->Mysql($check, true);
 
     if (!$exe) {
@@ -188,33 +188,11 @@ if (isset($_POST["deletes"]) && !empty($_POST["deletes"])) {
         //     "course_status" => $c_status
         // ];
 
-        echo $db->delete(COURSE, "`c_id`='{$c_id}'");
+        echo $db->delete(_Parent, "`p_id`='{$c_id}'");
     }
 }
 
 
 
-
-// $a = [1, 2, 3, 4,87 , 5, 6, 7];
-
-// for ($select = 0; $select < count($a); $select++) {
-//     $greater = true;
-
-//     for ($check = 0; $check < count($a); $check++) {
-
-//         if ($check != $select) {
-//             if ($a[$select] < $a[$check]) {
-//                 $greater = false;
-
-//                 break;
-//             }
-//         }
-//     }
-
-//     if ($greater) {
-//         echo $a[$select];
-//     }
-
-// }
 
 ?>

@@ -12,8 +12,9 @@ $help = new help;
 <div class="container-fluid card">
 
     <div class="row">
-        <form action="">
+        <form action="javascript:void(0)" id="student">
 
+        <input type="text" name="inserts" value="inserts">
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header">
@@ -39,23 +40,24 @@ $help = new help;
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-xl-9 col-lg-8">
                                 <div class="row">
                                     <div class="col-xl-12 col-sm-6">
                                         <div class="mb-3">
                                             <label for="exampleFormControlInput1" class="form-label text-primary">First
                                                 Name<span class="required">*</span></label>
-                                            <input type="text" class="form-control" name="f_name"
+                                            <input type="text" class="form-control" name="s_f_name"
                                                 id="exampleFormControlInput1" placeholder="James">
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleFormControlInput4" class="form-label text-primary">Last
                                                 Name<span class="required">*</span></label>
-                                            <input type="text" name="l_name" class="form-control"
+                                            <input type="text" name="s_l_name" class="form-control"
                                                 id="exampleFormControlInput4" placeholder="Wally">
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label text-primary">Date & Place of Birth<span
+                                            <label class="form-label text-primary">Date of Birth<span
                                                     class="required">*</span></label>
                                             <div class="d-flex">
                                                 <input type="text" name="DOB" class="form-control"
@@ -66,7 +68,8 @@ $help = new help;
 
                                         <div class="mb-4">
                                             <label for="" class="col-form-label">Student Parent</label>
-                                            <select class="col-md-12 col-sm-12 default-select form-control wide " name="s_parent" id="s_parent">
+                                            <select class="col-md-12 col-sm-12 default-select form-control wide "
+                                                name="s_parent" id="s_parent">
                                                 <option selected>Select one</option>
                                                 <?php
                                                 $s_p = $db->select(true, _Parent, "*");
@@ -77,7 +80,9 @@ $help = new help;
                                                 
                                                         ?>
 
-                                                        <option value="<?php echo $value["p_id"] ?>"><?php echo $value["f_name"] ?> <?php echo $value["l_name"] ?> </option>
+                                                        <option value="<?php echo $value["p_id"] ?>">
+                                                            <?php echo $value["f_name"] ?>         <?php echo $value["l_name"] ?>
+                                                        </option>
 
                                                         <?php
                                                     }
@@ -88,11 +93,14 @@ $help = new help;
                                         </div>
 
 
+
+                                       
+
                                         <div class="mb-3">
                                             <label for="exampleFormControlInput3"
                                                 class="form-label text-primary">Email<span
                                                     class="required">*</span></label>
-                                            <input type="email" name="email" class="form-control"
+                                            <input type="email" name="s_email" class="form-control"
                                                 id="exampleFormControlInput3" placeholder="hello@example.com">
                                         </div>
 
@@ -100,10 +108,8 @@ $help = new help;
                                             <label for="exampleFormControlTextarea1"
                                                 class="form-label text-primary">Address<span
                                                     class="required">*</span></label>
-                                            <textarea class="form-control" name="address"
-                                                id="exampleFormControlTextarea1" rows="6">
-
-                                                  </textarea>
+                                            <textarea class="form-control" name="s_address"
+                                                id="exampleFormControlTextarea1" rows="6"></textarea>
                                         </div>
 
                                         <div class="mb-3">
@@ -121,16 +127,19 @@ $help = new help;
                                 </div>
                             </div>
                         </div>
+                        <div class="">
+                            <!-- <button class="btn btn-outline-primary me-3">Save as Draft</button> -->
+                            <button class="btn btn-primary" type="submit">Save</button>
+                        </div>
                     </div>
+
                 </div>
+
             </div>
 
 
             <!-- =================================parent form ============= -->
-            <div class="">
-                <!-- <button class="btn btn-outline-primary me-3">Save as Draft</button> -->
-                <button class="btn btn-primary" type="submit">Save</button>
-            </div>
+
         </form>
     </div>
 
@@ -145,45 +154,24 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
 
 
 <script>
-    let editorObject;
-    $(document).ready(function () {
+ 
+    
 
+    let student = document.querySelector("#student");
 
-        let editor = document.querySelector("#editor");
-
-
-        ClassicEditor.create(editor).then(e => {
-
-
-            editorObject = e;
-
-        }).catch(er => {
-            console.log(er)
-        })
-
-    })
-
-    let Course = document.querySelector("#Course");
-
-    Course.addEventListener("submit", async function (e) {
+    student.addEventListener("submit", async function (e) {
         e.preventDefault();
 
-        let outline = "";
+      
 
-        let formData = new FormData(Course);
-        if (editorObject) {
-            outline = editorObject.getData();
-
-        }
-
-        formData.append("c_outline", outline)
-
+        let formData = new FormData(student);
+     
         // for (const value of formData.values()) {
         //     console.log(value);
         // }
 
 
-        let url = "<?php echo c_form_action; ?>";
+        let url = "<?php echo s_form_action; ?>";
 
         let options = {
             method: "POST",
@@ -205,10 +193,8 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
 
             ALertMSG("error", res.msg, "success");
 
-            Course.reset()
-            if (editorObject) {
-                editorObject.setData(''); // or set to any default value
-            }
+            student.reset()
+           
         }
     })
 

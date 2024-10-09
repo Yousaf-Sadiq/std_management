@@ -299,7 +299,7 @@ $help = new help;
 
                 <form id="del_Course" action="javascript:void(0)">
                     <input type="hidden" name="deletes" value="deletes">
-                    <input type="hidden" name="c_id" id="cId">
+                    <input type="hidden" name="c_id" id="PId">
 
 
                     <div class="mb-3 row">
@@ -340,7 +340,7 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
         myModalAlternative.show(DeleteModal)
 
 
-        let c_ids = document.querySelector("#cId");
+        let c_ids = document.querySelector("#PId");
         c_ids.value = id;
 
 
@@ -360,7 +360,7 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
 
 
 
-        let url = "<?php echo c_form_action; ?>";
+        let url = "<?php echo p_form_action; ?>";
 
         let options = {
             method: "POST",
