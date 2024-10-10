@@ -95,6 +95,41 @@
     appendAlert(msg, classes)
 
   }
+
+  function showFileSize(id) {
+    var input, file;
+
+    if (typeof window.FileReader !== 'function') {
+      ALertMSG("error", "The file API isn't supported on this browser yet.", "danger");
+      return;
+    }
+
+    input = document.getElementById(id);
+    if (!input) {
+      ALertMSG("error", "Um, couldn't find the filename element.", "danger");
+      return 1;
+    }
+
+
+    else if (!input.files) {
+      ALertMSG("error", "This browser doesn't seem to support the `files` property of file inputs.", "danger");
+      return 2;
+    }
+    else if (!input.files[0]) {
+      ALertMSG("error", "Please select a file ", "danger");
+      return 3
+    }
+    else {
+      file = input.files[0];
+      // ALertMSG("error", "The size of file '" + file.name + "' is " + file.size + " bytes", "success");
+    }
+
+    function write(msg) {
+      var p = document.createElement('p');
+      p.innerHTML = msg;
+      document.body.appendChild(p);
+    }
+  }
 </script>
 
 </body>

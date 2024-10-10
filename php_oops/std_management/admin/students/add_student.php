@@ -6,6 +6,8 @@ use App\database\helper as help;
 $db = new db;
 
 $help = new help;
+
+echo rel_url;
 ?>
 
 
@@ -14,7 +16,7 @@ $help = new help;
     <div class="row">
         <form action="javascript:void(0)" id="student">
 
-        <input type="text" name="inserts" value="inserts">
+            <input type="hidden" name="inserts" value="inserts">
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header">
@@ -27,16 +29,17 @@ $help = new help;
                                 <label class="form-label text-primary">Photo<span class="required">*</span></label>
                                 <div class="avatar-upload">
                                     <div class="avatar-preview">
-                                        <div id="imagePreview" style="background-image: url(images/no-img-avatar.png);">
+                                        <div id="imagePreview"
+                                            style="background-image: url(<?php echo abs_url ?>assets/admin/images/no-img-avatar.png);">
                                         </div>
                                     </div>
                                     <div class="change-btn mt-2 mb-lg-0 mb-3">
-                                        <input type='file' class="form-control d-none" id="imageUpload"
+                                        <input type='file' name="profile" class="form-control d-none" id="imageUpload"
                                             accept=".png, .jpg, .jpeg">
                                         <label for="imageUpload" class="dlab-upload mb-0 btn btn-primary btn-sm">Choose
                                             File</label>
-                                        <a href="javascript:void"
-                                            class="btn btn-danger light remove-img ms-2 btn-sm">Remove</a>
+                                        <!-- <a href="javascript:void"
+                                            class="btn btn-danger light remove-img ms-2 btn-sm">Remove</a> -->
                                     </div>
                                 </div>
                             </div>
@@ -94,7 +97,7 @@ $help = new help;
 
 
 
-                                       
+
 
                                         <div class="mb-3">
                                             <label for="exampleFormControlInput3"
@@ -154,21 +157,52 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
 
 
 <script>
- 
-    
+
+
 
     let student = document.querySelector("#student");
+
+
+    let _files = document.querySelector("#imageUpload");
+
+    let imagePreview = document.querySelector("#imagePreview");
+
+
+    _files.addEventListener("change", function () {
+        let file = _files.files[0];
+        console.log(file)
+        $q = showFileSize("imageUpload")
+        if ($q == 1 || $q == 2 || $q == 3) {
+            return;
+        }
+
+        let reader = new FileReader();
+
+        reader.onload = function (t) {
+            // console.log();
+            let imageUrl = t.target.result;
+
+            imagePreview.style.backgroundImage = `url(${imageUrl})`;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file)
+        }
+
+    })
 
     student.addEventListener("submit", async function (e) {
         e.preventDefault();
 
-      
+
 
         let formData = new FormData(student);
-     
+        let file = _files.files[0];
+
         // for (const value of formData.values()) {
         //     console.log(value);
         // }
+        formData.append("profile", file);
 
 
         let url = "<?php echo s_form_action; ?>";
@@ -194,7 +228,7 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
             ALertMSG("error", res.msg, "success");
 
             student.reset()
-           
+
         }
     })
 

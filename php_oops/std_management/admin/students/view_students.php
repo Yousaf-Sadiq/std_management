@@ -27,6 +27,7 @@ $help = new help();
                         </div>
                     </th> -->
                         <th><strong>#</strong></th>
+                        <th><strong>Image</strong></th>
                         <th><strong> NAME</strong></th>
                         <th><strong> EMAIL</strong></th>
                         <th><strong> DATE OF BIRTH</strong></th>
@@ -41,9 +42,15 @@ $help = new help();
                     $count = 1;
                     foreach ($rowCourse as $course) {
                         # code...
-                
+                        if (isset($course["profile"]) && !empty($course["profile"])) {
+                            $image = json_decode($course["profile"], true);
+
+                        } else {
+                            $image["absUrl"] = abs_url . "assets/admin/images/no-img-avatar.png";
+                        }
                         ?>
                         <tr>
+
                             <!-- 
                         <td><div class="d-flex align-items-center"><i class="fa fa-circle text-danger me-1"></i> Canceled</div></td>    
                         <td>
@@ -53,6 +60,17 @@ $help = new help();
                         </div>
                     </td> -->
                             <td><strong><?php echo $count; ?></strong></td>
+
+
+                            <td>
+                                <div class="trans-list">
+                                    <a href="<?php echo $image["absUrl"] ?>" target="_blank">
+                                        <img src="<?php echo $image["absUrl"] ?>" alt="" class="avatar avatar-sm me-3">
+                                    </a>
+                                    <!-- <h4>Samantha William</h4> -->
+                                </div>
+                            </td>
+
 
                             <td><?php echo $course["f_name"] ?>         <?php echo $course["l_name"] ?></td>
                             <td><?php echo $course["email"] ?></td>

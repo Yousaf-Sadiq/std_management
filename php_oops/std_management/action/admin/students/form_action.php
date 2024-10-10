@@ -19,6 +19,9 @@ if (isset($_POST["inserts"]) && !empty($_POST["inserts"])) {
     $s_parent = $help->filter_data($_POST["s_parent"]);
     $s_address = $help->filter_data($_POST["s_address"]);
 
+    $input = "profile";
+
+    $file = $_FILES[$input];
 
     $status = [
         "error" => 0,
@@ -78,6 +81,33 @@ if (isset($_POST["inserts"]) && !empty($_POST["inserts"])) {
         array_push($status["msg"], "EMAIL ALREADY EXIST");
     }
 
+    if (!isset($file["name"]) || empty($file["name"])) {
+        $status['error']++;
+        array_push($status["msg"], "PROFILE IS REQUIRED");
+    } else {
+
+        $ext = ["jpg", "png", "jpeg"];
+        $File = $help->FileUPload($input, $ext, "/assets/admin/upload/");
+        if ($File == 5) {
+            $status['error']++;
+
+            $s = implode(" ", $ext);
+            $s = strtoupper($s);
+
+            array_push($status["msg"], "{$s}  ONLY ALLOWED");
+            $File = NULL;
+        } else if ($File == 9) {
+            $status['error']++;
+            array_push($status["msg"], "UPLOADING ERROR");
+            $File = NULL;
+        } else {
+
+            $File = json_encode($File);
+        }
+
+
+    }
+
 
 
     if ($status["error"] > 0) {
@@ -97,7 +127,8 @@ if (isset($_POST["inserts"]) && !empty($_POST["inserts"])) {
             "ptoken" => $encrypt,
             "contact" => $std_number,
             "DOB" => $DOB,
-            "address" => $s_address
+            "address" => $s_address,
+            "profile" => $File
         ];
 
         $db->insert(_std, $data);
