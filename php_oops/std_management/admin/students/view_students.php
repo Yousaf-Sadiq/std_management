@@ -29,6 +29,7 @@ $help = new help();
                         <th><strong>#</strong></th>
                         <th><strong>Image</strong></th>
                         <th><strong> NAME</strong></th>
+                        <th><strong> Parent NAME</strong></th>
                         <th><strong> EMAIL</strong></th>
                         <th><strong> DATE OF BIRTH</strong></th>
                         <th><strong> CONTACT</strong></th>
@@ -48,17 +49,23 @@ $help = new help();
                         } else {
                             $image["absUrl"] = abs_url . "assets/admin/images/no-img-avatar.png";
                         }
+
+
+
+                        $p_s_fetch = $db->select(true, _std_parent, "*", "`student_id`='{$course["std_id"]}'");
+                        if ($p_s_fetch) {
+                            $p_s_row = $db->GetResult();
+
+                            $p_fetch = $db->select(true, _Parent, "*", "`p_id`='{$p_s_row[0]["parent_id"]}'");
+                            $p_row = $db->GetResult();
+                            $p_name = $p_row[0]["f_name"] . " " . $p_row[0]["l_name"];
+                        } else {
+                            $p_name = "not defined";
+                        }
                         ?>
                         <tr>
 
-                            <!-- 
-                        <td><div class="d-flex align-items-center"><i class="fa fa-circle text-danger me-1"></i> Canceled</div></td>    
-                        <td>
-                        <div class="form-check custom-checkbox checkbox-success check-lg me-3">
-                            <input type="checkbox" class="form-check-input" id="customCheckBox2" required="">
-                            <label class="form-check-label" for="customCheckBox2"></label>
-                        </div>
-                    </td> -->
+
                             <td><strong><?php echo $count; ?></strong></td>
 
 
@@ -67,12 +74,14 @@ $help = new help();
                                     <a href="<?php echo $image["absUrl"] ?>" target="_blank">
                                         <img src="<?php echo $image["absUrl"] ?>" alt="" class="avatar avatar-sm me-3">
                                     </a>
-                                    <!-- <h4>Samantha William</h4> -->
+
                                 </div>
                             </td>
 
 
                             <td><?php echo $course["f_name"] ?>         <?php echo $course["l_name"] ?></td>
+                            <td><?php echo $p_name ?> </td>
+
                             <td><?php echo $course["email"] ?></td>
                             <td><?php echo $course["DOB"] ?></td>
                             <td><?php echo $course["contact"] ?></td>
@@ -97,16 +106,19 @@ $help = new help();
                                 <div class="d-flex">
                                     <?php
 
-                                    $p_id = $course["std_id"];
+                                    $std_id = $course["std_id"];
                                     $f_name = $course["f_name"];
                                     $l_name = $course["l_name"];
                                     $email = $course["email"];
-                                    $p_status = $course["std_status"];
+                                    $std_status = $course["std_status"];
                                     $contact = $course["contact"];
+                                    $address = $course["address"];
+                                    $DOB = $course["DOB"];
+                                    $p_id = $p_row[0]["p_id"];
 
                                     ?>
                                     <a href="javascript:void(0)"
-                                        onclick="OnEdit('<?php echo $p_id ?>','<?php echo $f_name ?>','<?php echo $l_name ?>','<?php echo $email ?>','<?php echo $p_status ?>','<?php echo $contact ?>')"
+                                        onclick="OnEdit('<?php echo $std_id ?>','<?php echo $f_name ?>','<?php echo $l_name ?>','<?php echo $email ?>','<?php echo $std_status ?>','<?php echo $contact ?>','<?php echo $address ?>','<?php echo $p_id ?>','<?php echo $DOB ?>')"
                                         class="btn btn-primary shadow btn-xs sharp me-1"><i class="fa fa-pencil"></i></a>
 
                                     <a href="javascript:void(0)" onclick="OnDelete('<?php echo $p_id ?>')"
@@ -140,42 +152,129 @@ $help = new help();
             </div>
             <div class="modal-body">
 
-                <form id="Course" action="javascript:void(0)">
+                <form action="javascript:void(0)" id="edit_student">
+
                     <input type="hidden" name="updates" value="updates">
-                    <input type="hidden" name="c_id" id="c_id">
-                    <div class="mb-3 row">
-                        <label class="col-sm-12 col-form-label">COURSE NAME</label>
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="c_name" name="c_name"
-                                placeholder="ENTER COURSE NAME">
+                    <input type="text" id="std_id" name="std_id">
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Student Details</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+
+                                    <div class="col-xl-3 col-lg-4">
+                                        <label class="form-label text-primary">Photo<span
+                                                class="required">*</span></label>
+                                        <div class="avatar-upload">
+                                            <div class="avatar-preview">
+                                                <div id="imagePreview"
+                                                    style="background-image: url(<?php echo abs_url ?>assets/admin/images/no-img-avatar.png);">
+                                                </div>
+                                            </div>
+                                            <div class="change-btn mt-2 mb-lg-0 mb-3">
+                                                <input type='file' name="profile" class="form-control d-none"
+                                                    id="imageUpload" accept=".png, .jpg, .jpeg">
+                                                <label for="imageUpload"
+                                                    class="dlab-upload mb-0 btn btn-primary btn-sm">Choose
+                                                    File</label>
+                                                <!-- <a href="javascript:void"
+                                class="btn btn-danger light remove-img ms-2 btn-sm">Remove</a> -->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-9 col-lg-8">
+                                        <div class="row">
+                                            <div class="col-xl-12 col-sm-6">
+                                                <div class="mb-3">
+                                                    <label for="exampleFormControlInput1"
+                                                        class="form-label text-primary">First
+                                                        Name<span class="required">*</span></label>
+                                                    <input type="text" class="form-control" name="s_f_name"
+                                                        id="s_f_name" placeholder="James">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="exampleFormControlInput4"
+                                                        class="form-label text-primary">Last
+                                                        Name<span class="required">*</span></label>
+                                                    <input type="text" name="s_l_name" class="form-control"
+                                                        id="s_l_name" placeholder="Wally">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label text-primary">Date of Birth<span
+                                                            class="required">*</span></label>
+                                                    <div class="d-flex">
+                                                        <input type="text" name="DOB" class="form-control"
+                                                            placeholder="2017-06-04" id="datepicker">
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="mb-4">
+                                                    <label for="" class="col-form-label">Student Parent</label>
+
+                                                    <div id="s_parent2"></div>
+
+
+                                                </div>
+
+
+
+
+
+                                                <div class="mb-3">
+                                                    <label for="exampleFormControlInput3"
+                                                        class="form-label text-primary">Email<span
+                                                            class="required">*</span></label>
+                                                    <input type="email" name="s_email" class="form-control" id="s_email"
+                                                        placeholder="hello@example.com">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="exampleFormControlTextarea1"
+                                                        class="form-label text-primary">Address<span
+                                                            class="required">*</span></label>
+                                                    <textarea class="form-control" name="s_address" id="s_address"
+                                                        rows="6"></textarea>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="exampleFormControlInput6"
+                                                        class="form-label text-primary">Phone
+                                                        Number<span class="required">*</span></label>
+                                                    <input type="number" name="std_number" class="form-control"
+                                                        id="std_number" placeholder="+123456789">
+                                                </div>
+
+
+                                                <div class="mb-3">
+                                                    <label for="exampleFormControlInput6"
+                                                        class="form-label text-primary"> Student Status<span
+                                                            class="required">*</span></label>
+
+                                                    <div id="std_status"></div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <!-- <button class="btn btn-outline-primary me-3">Save as Draft</button> -->
+                                    <button class="btn btn-primary" type="submit">Save</button>
+                                </div>
+                            </div>
+
                         </div>
-                    </div>
-                    <div class="mb-1 row">
-
-
-                        <div class="card ">
-                            <label class="col-sm-12 col-form-label">COURSE OUTLINE</label>
-                            <textarea id="editor"></textarea>
-                        </div>
 
                     </div>
 
-                    <div class="mb-3 row">
-                        <label class="col-sm-12 col-form-label">COURSE STATUS</label>
-                        <div id="c_status"></div>
-                        <!-- <select class="col-md-12 col-sm-12 default-select form-control wide" tabindex="null">
-                            <option>PUBLISHED</option>
-                            <option>DRAFT</option>
 
-                        </select> -->
-                    </div>
+                    <!-- =================================parent form ============= -->
 
-
-                    <div class="mb-3 row">
-                        <div class="col-sm-10">
-                            <button type="submit" id="ok" class="btn btn-primary">SAVE</button>
-                        </div>
-                    </div>
                 </form>
 
 
@@ -241,29 +340,7 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
 <script>
 
 
-    let editorObject;
-    $(document).ready(function () {
 
-
-
-
-
-
-
-
-        let editor = document.querySelector("#editor");
-
-
-        ClassicEditor.create(editor).then(e => {
-
-
-            editorObject = e;
-
-        }).catch(er => {
-            console.log(er)
-        })
-
-    })
 
 
 
@@ -330,8 +407,7 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
 
 
 
-
-    function OnEdit(id, c_name, c_status, c_outline) {
+    async function OnEdit(stdId, fName, fLame, sEmail, stdStatus, sContact, sAddress, pId, dob) {
 
         let EditModal = document.querySelector("#edit_modal");
 
@@ -339,35 +415,76 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
         myModalAlternative.show(EditModal)
 
 
-        let c_ids = document.querySelector("#c_id");
-        c_ids.value = id;
+        let std_id = document.querySelector("#std_id");
+        std_id.value = stdId;
 
-        let c_names = document.querySelector("#c_name");
-        c_names.value = c_name
+        let s_f_name = document.querySelector("#s_f_name");
+        s_f_name.value = fName
 
-        let c_statuses = document.querySelector("#c_status");
+
+        let s_l_name = document.querySelector("#s_l_name");
+        s_l_name.value = fLame
+
+        let datepicker = document.querySelector("#datepicker");
+        datepicker.value = dob
+
+        let s_email = document.querySelector("#s_email");
+        s_email.value = sEmail
+
+        let s_address = document.querySelector("#s_address");
+        s_address.value = sAddress
+
+        let std_number = document.querySelector("#std_number");
+        std_number.value = sContact
+
+
+
+        let url = "<?php echo viewStd ?>";
+        let form_data = new FormData();
+        form_data.append("p_id", pId)
+        let op = {
+            method: "POST",
+            body: form_data
+        }
+
+        let edit_p = await fetch(url, op);
+        let edit_res = await edit_p.json()
+
+
+        let s_parent = document.querySelector("#s_parent2");
+
+        let output = ` <select
+                                                        class="col-md-12 col-sm-12 default-select form-control wide "
+                                                        name="s_parent" id="s_parent">`;
+        for (const key in edit_res) {
+            output += edit_res[key];
+        }
+
+        output += `</select>`;
+        console.log(output);
+
+        s_parent.innerHTML = output;
+
+
+
+        let std_status = document.querySelector("#std_status");
 
         let html = `<select name="c_status" class="col-md-12 col-sm-12 default-select form-control wide" tabindex="null">`;
-        if (c_status == 1) {
+        if (stdStatus == 1) {
 
-            html += ` <option selected value="${c_status}">PUBLISHED</option>` +
+            html += ` <option selected value="${stdStatus}">PUBLISHED</option>` +
                 `<option  value="0">DRAFT</option>`
 
         }
-        else if (c_status == 0) {
-            html += `<option selected value="${c_status}">DRAFT</option>` +
+        else if (stdStatus == 0) {
+            html += `<option selected value="${stdStatus}">DRAFT</option>` +
                 `<option  value="1">PUBLISHED</option>`
         }
         html += `</select>`;
 
-        c_statuses.innerHTML = html
+        std_status.innerHTML = html
 
 
-        // ----------------
-        if (editorObject) {
-            outline = editorObject.setData(c_outline);
-
-        }
 
     }
 
