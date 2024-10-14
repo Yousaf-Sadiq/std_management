@@ -115,10 +115,11 @@ $help = new help();
                                     $address = $course["address"];
                                     $DOB = $course["DOB"];
                                     $p_id = $p_row[0]["p_id"];
+                                    $images = $image["absUrl"];
 
                                     ?>
                                     <a href="javascript:void(0)"
-                                        onclick="OnEdit('<?php echo $std_id ?>','<?php echo $f_name ?>','<?php echo $l_name ?>','<?php echo $email ?>','<?php echo $std_status ?>','<?php echo $contact ?>','<?php echo $address ?>','<?php echo $p_id ?>','<?php echo $DOB ?>')"
+                                        onclick="OnEdit('<?php echo $std_id ?>','<?php echo $f_name ?>','<?php echo $l_name ?>','<?php echo $email ?>','<?php echo $std_status ?>','<?php echo $contact ?>','<?php echo $address ?>','<?php echo $p_id ?>','<?php echo $DOB ?>','<?php echo $images ?>')"
                                         class="btn btn-primary shadow btn-xs sharp me-1"><i class="fa fa-pencil"></i></a>
 
                                     <a href="javascript:void(0)" onclick="OnDelete('<?php echo $p_id ?>')"
@@ -141,8 +142,8 @@ $help = new help();
 
 <!-- edit modal  -->
 
-<div class="modal fade" id="edit_modal" style="display: none;" data-bs-backdrop="static" data-bs-keyboard="false"
-    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade modal-lg" id="edit_modal" style="display: none;" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -150,6 +151,7 @@ $help = new help();
                 <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
+
             <div class="modal-body">
 
                 <form action="javascript:void(0)" id="edit_student">
@@ -169,14 +171,15 @@ $help = new help();
                                                 class="required">*</span></label>
                                         <div class="avatar-upload">
                                             <div class="avatar-preview">
-                                                <div id="imagePreview"
-                                                    style="background-image: url(<?php echo abs_url ?>assets/admin/images/no-img-avatar.png);">
+                                                <div id="EditimagePreview">
                                                 </div>
                                             </div>
                                             <div class="change-btn mt-2 mb-lg-0 mb-3">
                                                 <input type='file' name="profile" class="form-control d-none"
-                                                    id="imageUpload" accept=".png, .jpg, .jpeg">
-                                                <label for="imageUpload"
+                                                    id="Edit_imageUpload" accept=".png, .jpg, .jpeg">
+
+
+                                                <label for="Edit_imageUpload"
                                                     class="dlab-upload mb-0 btn btn-primary btn-sm">Choose
                                                     File</label>
                                                 <!-- <a href="javascript:void"
@@ -294,7 +297,7 @@ $help = new help();
 <!-- delete modal  -->
 
 
-<div class="modal fade" id="delete_modal" style="display: none;" data-bs-backdrop="static" data-bs-keyboard="false"
+<div class="modal fade " id="delete_modal" style="display: none;" data-bs-backdrop="static" data-bs-keyboard="false"
     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -407,7 +410,7 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
 
 
 
-    async function OnEdit(stdId, fName, fLame, sEmail, stdStatus, sContact, sAddress, pId, dob) {
+    async function OnEdit(stdId, fName, fLame, sEmail, stdStatus, sContact, sAddress, pId, dob, img) {
 
         let EditModal = document.querySelector("#edit_modal");
 
@@ -437,11 +440,23 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
         let std_number = document.querySelector("#std_number");
         std_number.value = sContact
 
+        let image_Preview = document.querySelector("#EditimagePreview");
+        image_Preview.style.setProperty('background-image', `url('${img}')`);
+
+        // image_Preview.style.backgroundImage = `url('${imag}') !important`;
+
+        // console.log(`url('${imag}') !important`)
+
 
 
         let url = "<?php echo viewStd ?>";
         let form_data = new FormData();
+
+
+
         form_data.append("p_id", pId)
+
+
         let op = {
             method: "POST",
             body: form_data
@@ -461,7 +476,7 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
         }
 
         output += `</select>`;
-        console.log(output);
+        // console.log(output);
 
         s_parent.innerHTML = output;
 
@@ -469,7 +484,7 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
 
         let std_status = document.querySelector("#std_status");
 
-        let html = `<select name="c_status" class="col-md-12 col-sm-12 default-select form-control wide" tabindex="null">`;
+        let html = `<select name="std_status" class="col-md-12 col-sm-12 default-select form-control wide" tabindex="null">`;
         if (stdStatus == 1) {
 
             html += ` <option selected value="${stdStatus}">PUBLISHED</option>` +
@@ -489,27 +504,53 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
     }
 
 
-    let Course = document.querySelector("#Course");
+    let edit_student = document.querySelector("#edit_student");
 
-    Course.addEventListener("submit", async function (e) {
-        e.preventDefault();
+    let EditFile = "profile";
 
-        let outline = "";
+    Edit_imageUpload = document.querySelector("#Edit_imageUpload");
 
-        let formData = new FormData(Course);
-        if (editorObject) {
-            outline = editorObject.getData();
+    Edit_imageUpload.addEventListener("change", function () {
 
+        EditFile = Edit_imageUpload.files[0];
+        let image_Preview = document.querySelector("#EditimagePreview");
+
+        $q = showFileSize("Edit_imageUpload")
+        if ($q == 1 || $q == 2 || $q == 3) {
+            return;
         }
 
-        formData.append("c_outline", outline)
+        let reader = new FileReader();
+
+        reader.onload = function (t) {
+            // console.log();
+            let imageUrl = t.target.result;
+            image_Preview.style.setProperty('background-image', `url('${imageUrl}')`);
+            // image_Preview.style.backgroundImage = `url(${imageUrl})`;
+        }
+
+        if (EditFile) {
+            reader.readAsDataURL(EditFile)
+        }
+    })
+
+
+    edit_student.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        console.log(EditFile);
+
+
+        let formData = new FormData(edit_student);
+
+        formData.append("profile", EditFile)
 
         // for (const value of formData.values()) {
         //     console.log(value);
         // }
 
 
-        let url = "<?php echo c_form_action; ?>";
+        let url = "<?php echo s_form_action; ?>";
 
         let options = {
             method: "POST",
