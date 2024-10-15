@@ -122,7 +122,7 @@ $help = new help();
                                         onclick="OnEdit('<?php echo $std_id ?>','<?php echo $f_name ?>','<?php echo $l_name ?>','<?php echo $email ?>','<?php echo $std_status ?>','<?php echo $contact ?>','<?php echo $address ?>','<?php echo $p_id ?>','<?php echo $DOB ?>','<?php echo $images ?>')"
                                         class="btn btn-primary shadow btn-xs sharp me-1"><i class="fa fa-pencil"></i></a>
 
-                                    <a href="javascript:void(0)" onclick="OnDelete('<?php echo $p_id ?>')"
+                                    <a href="javascript:void(0)" onclick="OnDelete('<?php echo $std_id ?>')"
                                         class="btn btn-danger shadow btn-xs sharp"><i class="fa fa-trash"></i></a>
                                 </div>
                             </td>
@@ -157,7 +157,7 @@ $help = new help();
                 <form action="javascript:void(0)" id="edit_student">
 
                     <input type="hidden" name="updates" value="updates">
-                    <input type="text" id="std_id" name="std_id">
+                    <input type="hidden" id="std_id" name="std_id">
                     <div class="col-xl-12">
                         <div class="card">
                             <div class="card-header">
@@ -313,7 +313,7 @@ $help = new help();
 
                 <form id="del_Course" action="javascript:void(0)">
                     <input type="hidden" name="deletes" value="deletes">
-                    <input type="hidden" name="c_id" id="cId">
+                    <input type="hidden" name="std_id" id="cId">
 
 
                     <div class="mb-3 row">
@@ -375,7 +375,7 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
 
 
 
-        let url = "<?php echo c_form_action; ?>";
+        let url = "<?php echo s_form_action; ?>";
 
         let options = {
             method: "POST",
@@ -404,11 +404,10 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
     })
 
 
-    // =============================================================
+    // ==========================    delete end    ==========================================
 
 
-
-
+    // ==========================   EDIT start ==========================================
 
     async function OnEdit(stdId, fName, fLame, sEmail, stdStatus, sContact, sAddress, pId, dob, img) {
 

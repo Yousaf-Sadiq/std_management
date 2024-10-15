@@ -330,7 +330,7 @@ if (isset($_POST["updates"]) && !empty($_POST["updates"])) {
 
 if (isset($_POST["deletes"]) && !empty($_POST["deletes"])) {
 
-    $c_id = $_POST["c_id"];
+    $std_id = $_POST["std_id"];
 
 
     $status = [
@@ -338,14 +338,14 @@ if (isset($_POST["deletes"]) && !empty($_POST["deletes"])) {
         "msg" => []
     ];
 
-    if (!isset($c_id) || empty($c_id)) {
+    if (!isset($std_id) || empty($std_id)) {
         $status['error']++;
-        array_push($status["msg"], "COURSE ID IS REQUIRED");
+        array_push($status["msg"], "STUDENT ID IS REQUIRED");
     }
 
 
 
-    $check = "SELECT * FROM `" . COURSE . "` WHERE `c_id`='{$c_id}'";
+    $check = "SELECT * FROM `" . _std . "` WHERE `std_id`='{$std_id}'";
     $exe = $db->Mysql($check, true);
 
     if (!$exe) {
@@ -362,13 +362,25 @@ if (isset($_POST["deletes"]) && !empty($_POST["deletes"])) {
         return;
     } else {
 
-        // $data = [
-        //     "course_name" => $course_name,
-        //     "course_outline" => $c_outline,
-        //     "course_status" => $c_status
-        // ];
+        $fetchImage = $db->select(true, _std, "*", "`std_id`='{$std_id}'");
+        if ($fetchImage) {
+            $f_image = $db->GetResult();
 
-        echo $db->delete(COURSE, "`c_id`='{$c_id}'");
+
+            if (isset($f_image[0]["profile"]) && !empty($f_image[0]["profile"])) {
+                $oldImage = json_decode($f_image[0]["profile"], true);
+
+                if (file_exists($oldImage["relUrl"])) {
+                    unlink($oldImage["relUrl"]);
+                }
+            }
+        }
+
+
+        $db->delete(_std_parent, "`student_id`='{$std_id}'");
+
+        echo $db->delete(_std, "`std_id`='{$std_id}'");
+
     }
 }
 
