@@ -12,7 +12,7 @@ $help = new help;
 <div class="container-fluid card">
 
     <div class="row">
-        <form action="" id="parents">
+        <form action="" id="insert_a_course">
             <input type="hidden" name="inserts" value="inserts">
             <!-- =================================parent form ============= -->
             <div class="col-xl-12">
@@ -23,58 +23,60 @@ $help = new help;
                     <div class="card-body">
                         <div class="row">
                             <div class="col-xl-12 col-sm-6">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput8" class="form-label text-primary">First
-                                        Name<span class="required">*</span></label>
-                                    <input type="text" class="form-control" name="p_f_name"
-                                        id="exampleFormControlInput8" placeholder="Mana">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput10" class="form-label text-primary">Last
-                                        Name<span class="required">*</span></label>
-                                    <input type="text" name="p_l_name" class="form-control"
-                                        id="exampleFormControlInput10" placeholder="Wick">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput9" class="form-label text-primary">Email<span
-                                            class="required">*</span></label>
-                                    <input type="email" class="form-control" name="p_email"
-                                        id="exampleFormControlInput9" placeholder="hello@example.com">
-                                </div>
-                                <!-- <div class="mb-3">
-                                    <label for="exampleFormControlTextarea2"
-                                        class="form-label text-primary">Address<span class="required">*</span></label>
-                                    <textarea class="form-control"  name="p_f_name" id="exampleFormControlTextarea2" rows="6">
+                                <div class="mb-4">
+                                    <label for="" class="col-form-label">Select course</label>
+                                    <select class="col-md-12 col-sm-12 default-select form-control wide "
+                                        name="a_s_course" id="a_s_course">
+                                        <option selected value="">Select one</option>
+                                        <?php
+                                        $s_p = $db->select(true, COURSE, "*");
+                                        if ($s_p) {
+                                            $row_p = $db->GetResult();
+                                            foreach ($row_p as $key => $value) {
+                                                # code...
+                                        
+                                                ?>
 
-                                      </textarea>
-                                </div> -->
+                                                <option value="<?php echo $value["c_id"] ?>">
+                                                    <?php echo $value["course_name"] ?>
+                                                </option>
+
+                                                <?php
+                                            }
+                                        }
+
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="" class="col-form-label">Select Student</label>
+                                    <select class="col-md-12 col-sm-12 default-select form-control wide "
+                                        name="a_s_c_student" id="a_s_c_student">
+                                        <option selected value="">Select one</option>
+                                        <?php
+                                        $s_p = $db->select(true, _std, "*");
+                                        if ($s_p) {
+                                            $row_p = $db->GetResult();
+                                            foreach ($row_p as $key => $value) {
+                                                # code...
+                                        
+                                                ?>
+
+                                                <option value="<?php echo $value["std_id"] ?>">
+                                                    <?php echo $value["f_name"] ?>         <?php echo $value["l_name"] ?>
+                                                </option>
+
+                                                <?php
+                                            }
+                                        }
+
+                                        ?>
+                                    </select>
+                                </div>
+
                             </div>
 
-                            <div class="col-xl-12 col-sm-6">
 
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput11" class="form-label text-primary">Phone
-                                        Number<span class="required">*</span></label>
-                                    <input type="number" class="form-control" name="p_number"
-                                        id="exampleFormControlInput11" placeholder="+123456789">
-                                </div>
-                                <!-- <label class="form-label text-primary">Payments<span class="required">*</span></label>
-                                <div class="d-flex align-items-center">
-                                    <div class="form-check">
-                                        <input class="form-check-input"  name="p_number" type="checkbox" value="" id="flexCheckDefault">
-                                        <label class="form-check-label font-w500" for="flexCheckDefault">
-                                            Cash
-                                        </label>
-                                    </div>
-                                    <div class="form-check ms-3">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1">
-                                        <label class="form-check-label font-w500" for="flexCheckDefault1">
-                                            Debits
-                                        </label>
-                                    </div>
-
-                                </div> -->
-                            </div>
                         </div>
                         <div class="">
                             <!-- <button class="btn btn-outline-primary me-3">Save as Draft</button> -->
@@ -94,7 +96,11 @@ $help = new help;
 
 <div class="container-fluid">
     <?php
-    $fetch = $db->select(true, _Parent, "*");
+
+    $join = "INNER JOIN `" . _std . "`  ON " . _std . ".std_id = " . _std_course . ".student_id   
+     INNER JOIN `" . COURSE . "`  ON " . COURSE . ".c_id = " . _std_course . ".course_id  ";
+
+    $fetch = $db->select(true, _std_course, "*", null, null, null, $join);
 
     if ($fetch) {
         $rowCourse = $db->GetResult();
@@ -112,7 +118,7 @@ $help = new help;
                         <th><strong>#</strong></th>
                         <th><strong>NAME</strong></th>
                         <th><strong>Email</strong></th>
-                        <th><strong>Phone No.</strong></th>
+                        <th><strong>Course Name.</strong></th>
                         <th><strong>Status</strong></th>
                         <th><strong></strong></th>
                     </tr>
@@ -121,34 +127,29 @@ $help = new help;
 
                     <?php
                     $count = 1;
+
+                    // $help->pre($rowCourse);
                     foreach ($rowCourse as $course) {
                         # code...
                 
                         ?>
                         <tr>
-                            <!-- 
-                        <td><div class="d-flex align-items-center"><i class="fa fa-circle text-danger me-1"></i> Canceled</div></td>    
-                        <td>
-                        <div class="form-check custom-checkbox checkbox-success check-lg me-3">
-                            <input type="checkbox" class="form-check-input" id="customCheckBox2" required="">
-                            <label class="form-check-label" for="customCheckBox2"></label>
-                        </div>
-                    </td> -->
+
                             <td><strong><?php echo $count; ?></strong></td>
 
                             <td><?php echo $course["f_name"] ?>         <?php echo $course["l_name"] ?></td>
                             <td><?php echo $course["email"] ?></td>
-                            <td><?php echo $course["contact"] ?></td>
+                            <td><?php echo $course["course_name"] ?></td>
 
                             <td>
                                 <?php
-                                if ($course["p_status"] == 1) {
+                                if ($course["a_s_c_status"] == 1) {
                                     # code...
                         
                                     ?>
                                     <div class="d-flex align-items-center"><i class="fa fa-circle text-success me-1"></i> PUBLISHED
                                     </div>
-                                <?php } else if ($course["p_status"] == 0) {
+                                <?php } else if ($course["a_s_c_status"] == 0) {
 
 
                                     ?>
@@ -160,19 +161,17 @@ $help = new help;
                                 <div class="d-flex">
                                     <?php
 
-                                    $p_id = $course["p_id"];
-                                    $f_name = $course["f_name"];
-                                    $l_name = $course["l_name"];
-                                    $email = $course["email"];
-                                    $p_status = $course["p_status"];
-                                    $contact = $course["contact"];
+                                    $std_c_id = $course["std_c_id"];
+                                    $course_id = $course["course_id"];
+                                    $student_id = $course["student_id"];
+                                    $a_s_c_status = $course["a_s_c_status"];
 
                                     ?>
                                     <a href="javascript:void(0)"
-                                        onclick="OnEdit('<?php echo $p_id ?>','<?php echo $f_name ?>','<?php echo $l_name ?>','<?php echo $email ?>','<?php echo $p_status ?>','<?php echo $contact ?>')"
+                                        onclick="OnEdit('<?php echo $std_c_id ?>','<?php echo $a_s_c_status ?>')"
                                         class="btn btn-primary shadow btn-xs sharp me-1"><i class="fa fa-pencil"></i></a>
 
-                                    <a href="javascript:void(0)" onclick="OnDelete('<?php echo $p_id ?>')"
+                                    <a href="javascript:void(0)" onclick="OnDelete('<?php echo $std_c_id ?>')"
                                         class="btn btn-danger shadow btn-xs sharp"><i class="fa fa-trash"></i></a>
                                 </div>
                             </td>
@@ -205,7 +204,7 @@ $help = new help;
 
                 <form action="" id="edit_parents">
                     <input type="hidden" name="updates" value="updates">
-                    <input type="hidden" name="p_id" id="p_id" >
+                    <input type="hidden" name="p_id" id="p_id">
                     <!-- =================================parent form ============= -->
                     <div class="col-xl-12">
                         <div class="card">
@@ -454,7 +453,7 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
         let outline = "";
 
         let formData = new FormData(Course);
-       
+
         // for (const value of formData.values()) {
         //     console.log(value);
         // }
@@ -493,14 +492,14 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
 
 <script>
 
-    let parents = document.querySelector("#parents");
+    let insert_a_course = document.querySelector("#insert_a_course");
 
-    parents.addEventListener("submit", async function (e) {
+    insert_a_course.addEventListener("submit", async function (e) {
         e.preventDefault();
 
 
 
-        let formData = new FormData(parents);
+        let formData = new FormData(insert_a_course);
 
 
 
@@ -509,7 +508,7 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
         // }
 
 
-        let url = "<?php echo p_form_action; ?>";
+        let url = "<?php echo a_s_c_form_action; ?>";
 
         let options = {
             method: "POST",

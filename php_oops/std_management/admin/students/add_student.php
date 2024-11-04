@@ -176,6 +176,7 @@ require_once dirname(__DIR__) . "/../layout/admin/footer.php";
             return;
         }
 
+
         let reader = new FileReader();
 
         reader.onload = function (t) {
